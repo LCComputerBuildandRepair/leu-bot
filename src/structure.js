@@ -69,6 +69,18 @@ const PING_ROLES = [
   { key: 'p_scrim',    name: '🆚 Scrim Pings',   color: 0x60A5FA },
   { key: 'p_tourney',  name: '🏆 Tournaments',   color: 0xFCD34D },
   { key: 'p_events',   name: '🎉 Events',        color: 0x34D399 },
+  { key: 'p_movie',    name: '📽️ Movie Night',   color: 0xF87171 },
+  { key: 'p_quiz',     name: '🎵 Music Quiz',    color: 0x2DD4BF },
+];
+
+// Level-reward roles — auto-granted at these XP milestones (see messageCreate.js).
+// Listed low→high; the bot keeps only the highest one a member has earned.
+const LEVEL_ROLES = [
+  { key: 'lvl5',   name: '🔆 Level 5',   color: 0x9CA3AF, level: 5 },
+  { key: 'lvl10',  name: '⚡ Level 10',  color: 0x60A5FA, level: 10 },
+  { key: 'lvl25',  name: '🌟 Level 25',  color: 0xA78BFA, level: 25 },
+  { key: 'lvl50',  name: '💎 Level 50',  color: 0xF472B6, level: 50 },
+  { key: 'lvl100', name: '👑 Level 100', color: 0xFBBF24, level: 100 },
 ];
 
 // ── Channel blueprint ──────────────────────────────────────────────────────────
@@ -124,6 +136,16 @@ const CATEGORIES = [
     ],
   },
   {
+    key: 'cat_events', name: '🎉 EVENTS & GAMES', visibility: 'verified',
+    channels: [
+      { key: 'events',      name: '📅・events',       type: 'text', readonly: true },
+      { key: 'music_quiz',  name: '🎵・music-quiz',   type: 'text' },
+      { key: 'vc_music',    name: '🎵 Music Quiz',    type: 'voice' },
+      { key: 'movie_night', name: '📽️・movie-nights', type: 'text' },
+      { key: 'vc_movie',    name: '📽️ Movie Night',   type: 'voice' },
+    ],
+  },
+  {
     key: 'cat_voice', name: '🔊 VOICE', visibility: 'verified',
     channels: [
       { key: 'vc_create', name: '➕ Join to Create', type: 'voice' }, // spawns a temp VC per user
@@ -174,4 +196,4 @@ function gameCategory(g) {
 
 CATEGORIES.splice(3, 0, ...GAME_ROLES.map(gameCategory));
 
-module.exports = { ROLES, GAME_ROLES, PING_ROLES, CATEGORIES };
+module.exports = { ROLES, GAME_ROLES, PING_ROLES, LEVEL_ROLES, CATEGORIES };

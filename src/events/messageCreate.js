@@ -3,6 +3,22 @@ const { Events, PermissionFlagsBits } = require('discord.js');
 const db = require('../database');
 const E = require('../utils/embeds');
 const { isStaff, logTo } = require('../utils/helpers');
+const { LEVEL_ROLES } = require('../structure');
+
+// Give the member the highest level-reward role they've earned, remove lower ones.
+async function syncLevelRole(member, level) {
+  const earned = LEVEL_ROLES.filter((r) => level >= r.level);
+  if (!earned.length) return null;
+  const top = earned[earned.length - 1];
+  const topId = db.roleId(top.key);
+  for (const r of LEVEL_ROLES) {
+    const id = db.roleId(r.key);
+    if (!id) continue;
+    if (id === topId) { if (!member.roles.cache.has(id)) await member.roles.add(id).catch(() => {}); }
+    else if (member.roles.cache.has(id)) await member.roles.remove(id).catch(() => {});
+  }
+  return top;
+}
 
 // XP needed to clear a given level (Mee6-style curve).
 const xpNeeded = (level) => 5 * level * level + 50 * level + 100;
@@ -58,7 +74,9 @@ module.exports = {
     db.setLevel(message.author.id, data);
 
     if (leveled) {
-      message.channel.send({ embeds: [E.brand('⚡ Level Up!', `${message.author} just reached **Level ${data.level}**! 🔥`)] }).catch(() => {});
+      const reward = await syncLevelRole(message.member, data.level).catch(() => null);
+      const extra = reward ? `\nYou earned the **${reward.name}** role! 🎉` : '';
+      message.channel.send({ embeds: [E.brand('⚡ Level Up!', `${message.author} just reached **Level ${data.level}**! 🔥${extra}`)] }).catch(() => {});
     }
   },
 };

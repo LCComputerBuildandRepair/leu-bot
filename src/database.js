@@ -27,7 +27,8 @@ const DEFAULTS = {
   levels: {},        // userId → { xp, level }
   tempVcs: {},       // channelId → ownerId  (join-to-create voice rooms)
   starboard: {},     // sourceMsgId → starboardMsgId
-  counters: { ticket: 0, scrim: 0, tournament: 0 },
+  movies: {},        // id → movie-night data
+  counters: { ticket: 0, scrim: 0, tournament: 0, movie: 0 },
 };
 
 let cache = null;
@@ -103,6 +104,10 @@ const db = {
   // ── starboard ──
   getStar(srcId) { return load().starboard[srcId]; },
   setStar(srcId, starId) { load().starboard[srcId] = starId; save(); },
+
+  // ── movie nights ──
+  setMovie(id, data) { load().movies[id] = data; save(); },
+  getMovie(id) { return load().movies[id]; },
 
   save,
 };

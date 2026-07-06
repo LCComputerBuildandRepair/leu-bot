@@ -7,7 +7,7 @@ const {
 const db = require('../database');
 const E = require('../utils/embeds');
 const panels = require('../panels');
-const { ROLES, GAME_ROLES, PING_ROLES, CATEGORIES } = require('../structure');
+const { ROLES, GAME_ROLES, PING_ROLES, LEVEL_ROLES, CATEGORIES } = require('../structure');
 
 const EPH = MessageFlags.Ephemeral;
 
@@ -66,7 +66,7 @@ module.exports = {
 
 // ── Roles ────────────────────────────────────────────────────────────────────
 async function buildRoles(guild, log) {
-  const all = [...ROLES, ...GAME_ROLES, ...PING_ROLES];
+  const all = [...ROLES, ...GAME_ROLES, ...PING_ROLES, ...LEVEL_ROLES];
   await guild.roles.fetch();
   for (const def of all) {
     let role = guild.roles.cache.find((r) => r.name === def.name);

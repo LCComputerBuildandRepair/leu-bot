@@ -150,6 +150,34 @@ const handlers = {
       );
     await interaction.update({ embeds: [embed], components: interaction.message.components });
   },
+
+  // ── Movie night RSVP ─────────────────────────────────────────────────────
+  async mn(interaction) {
+    const [, choice, id] = interaction.customId.split(':');
+    const movie = db.getMovie(id);
+    if (!movie) return interaction.reply({ embeds: [E.error('Not found', 'This movie night no longer exists.')], flags: EPH });
+
+    const uid = interaction.user.id;
+    // Remove the user from all lists, then add to the chosen one (toggle off if same).
+    const was = ['going', 'maybe', 'out'].find((k) => movie[k].includes(uid));
+    for (const k of ['going', 'maybe', 'out']) movie[k] = movie[k].filter((u) => u !== uid);
+    if (was !== choice) movie[choice].push(uid);
+    db.setMovie(id, movie);
+
+    const fmt = (arr) => arr.length ? arr.map((u) => `<@${u}>`).join(' ') : '_—_';
+    const src = interaction.message.embeds[0];
+    const embed = E.base(src.color ?? undefined).setTitle(src.title).setDescription(src.description || null);
+    if (src.footer?.text) embed.setFooter({ text: src.footer.text });
+    // Rebuild the static fields + refreshed RSVP tallies.
+    const staticFields = src.fields.filter((f) => !/Going|Maybe|Can't/.test(f.name));
+    embed.addFields(
+      ...staticFields,
+      { name: `✅ Going (${movie.going.length})`, value: fmt(movie.going), inline: true },
+      { name: `🤔 Maybe (${movie.maybe.length})`, value: fmt(movie.maybe), inline: true },
+      { name: `❌ Can't (${movie.out.length})`, value: fmt(movie.out), inline: true },
+    );
+    await interaction.update({ embeds: [embed], components: interaction.message.components });
+  },
 };
 
 module.exports = { route, handlers };

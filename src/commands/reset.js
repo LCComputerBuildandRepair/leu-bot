@@ -2,7 +2,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, MessageFlags } = require('discord.js');
 const db = require('../database');
 const E = require('../utils/embeds');
-const { ROLES, GAME_ROLES, PING_ROLES, CATEGORIES } = require('../structure');
+const { ROLES, GAME_ROLES, PING_ROLES, LEVEL_ROLES, CATEGORIES } = require('../structure');
 
 const EPH = MessageFlags.Ephemeral;
 
@@ -50,7 +50,7 @@ module.exports = {
       .forEach((c) => c.delete().catch(() => {}));
 
     if (interaction.options.getBoolean('roles')) {
-      for (const def of [...ROLES, ...GAME_ROLES, ...PING_ROLES]) {
+      for (const def of [...ROLES, ...GAME_ROLES, ...PING_ROLES, ...LEVEL_ROLES]) {
         if (def.key === 'bot') continue; // don't delete our own managed role
         const id = db.roleId(def.key);
         const r = id && guild.roles.cache.get(id);
