@@ -35,6 +35,24 @@ function getJSON(url) {
   });
 }
 
+// Download the preview into a Node stream (following redirects) so FFmpeg reads
+// from a pipe instead of needing to open an https URL itself.
+function getStream(url, redirects = 0) {
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && redirects < 3) {
+        res.resume();
+        resolve(getStream(res.headers.location, redirects + 1));
+      } else if (res.statusCode !== 200) {
+        res.resume();
+        reject(new Error('preview HTTP ' + res.statusCode));
+      } else {
+        resolve(res);
+      }
+    }).on('error', reject);
+  });
+}
+
 // Normalise for lenient matching: drop "(feat…)", punctuation, spaces.
 function norm(s) {
   return String(s).toLowerCase()
@@ -75,9 +93,16 @@ module.exports = {
       for (let i = pool.length - 1; i > 0; i--) { const j = (i * 7 + 3) % (i + 1); [pool[i], pool[j]] = [pool[j], pool[i]]; }
       const picks = pool.slice(0, rounds);
 
-      connection = joinVoiceChannel({ channelId: vc.id, guildId: interaction.guild.id, adapterCreator: interaction.guild.voiceAdapterCreator });
+      connection = joinVoiceChannel({
+        channelId: vc.id,
+        guildId: interaction.guild.id,
+        adapterCreator: interaction.guild.voiceAdapterCreator,
+        selfDeaf: false,
+        selfMute: false,
+      });
       await entersState(connection, VoiceConnectionStatus.Ready, 20_000);
       const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Play } });
+      player.on('error', (e) => console.error('[musicquiz] player error:', e.message));
       connection.subscribe(player);
 
       const scores = new Map();
@@ -86,7 +111,12 @@ module.exports = {
 
       for (let r = 0; r < picks.length; r++) {
         const track = picks[r];
-        player.play(createAudioResource(track.preview));
+        try {
+          const stream = await getStream(track.preview);
+          player.play(createAudioResource(stream));
+        } catch (e) {
+          console.error('[musicquiz] stream error:', e.message);
+        }
 
         await channel.send({ embeds: [E.info(`🎶 Round ${r + 1}/${picks.length}`, 'Name the **song** (and/or the **artist**) — type it in chat!')] });
 
