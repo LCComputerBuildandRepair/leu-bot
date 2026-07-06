@@ -49,11 +49,14 @@ module.exports = {
       }
     }
 
-    // ── Suggestion auto-voting ──
-    if (message.channel.id === db.channelId('suggest') && message.content) {
+    // ── Suggestion auto-voting (general suggestions + movie suggestions) ──
+    const isSuggest = message.channel.id === db.channelId('suggest');
+    const isMovieSuggest = message.channel.id === db.channelId('movie_suggest');
+    if ((isSuggest || isMovieSuggest) && message.content) {
       await message.react('👍').catch(() => {});
       await message.react('👎').catch(() => {});
-      message.startThread({ name: `💡 ${message.content.slice(0, 60)}`, autoArchiveDuration: 1440 }).catch(() => {});
+      const tag = isMovieSuggest ? '🍿' : '💡';
+      message.startThread({ name: `${tag} ${message.content.slice(0, 60)}`, autoArchiveDuration: 1440 }).catch(() => {});
       return;
     }
 

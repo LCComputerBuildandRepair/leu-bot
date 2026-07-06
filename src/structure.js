@@ -59,6 +59,7 @@ const GAME_ROLES = [
   { key: 'g_wow',      name: 'World of Warcraft', emoji: '🐉', color: 0x2563EB, slug: 'wow' },
   { key: 'g_fc',       name: 'EA FC / FIFA',      emoji: '⚽', color: 0x16A34A, slug: 'eafc' },
   { key: 'g_lethal',   name: 'Lethal Company',    emoji: '👾', color: 0x65A30D, slug: 'lethal' },
+  { key: 'g_schedule1',name: 'Schedule 1',        emoji: '💊', color: 0x84CC16, slug: 'schedule-1' },
   { key: 'g_amongus',  name: 'Among Us',          emoji: '🛸', color: 0xC1121C, slug: 'amongus' },
   { key: 'g_other',    name: 'Other Games',       emoji: '🕹️', color: 0x64748B, slug: 'other-games' },
 ];
@@ -138,11 +139,12 @@ const CATEGORIES = [
   {
     key: 'cat_events', name: '🎉 EVENTS & GAMES', visibility: 'verified',
     channels: [
-      { key: 'events',      name: '📅・events',       type: 'text', readonly: true },
-      { key: 'music_quiz',  name: '🎵・music-quiz',   type: 'text' },
-      { key: 'vc_music',    name: '🎵 Music Quiz',    type: 'voice' },
-      { key: 'movie_night', name: '📽️・movie-nights', type: 'text' },
-      { key: 'vc_movie',    name: '📽️ Movie Night',   type: 'voice' },
+      { key: 'events',        name: '📅・events',            type: 'text', readonly: true },
+      { key: 'music_quiz',    name: '🎵・music-quiz',        type: 'text' },
+      { key: 'vc_music',      name: '🎵 Music Quiz',         type: 'voice' },
+      { key: 'movie_night',   name: '📽️・movie-nights',      type: 'text' },
+      { key: 'movie_suggest', name: '🍿・movie-suggestions', type: 'text' },
+      { key: 'vc_movie',      name: '📽️ Movie Night',        type: 'voice' },
     ],
   },
   {
