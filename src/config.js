@@ -21,4 +21,8 @@ module.exports = {
   // Logo shown on every embed. If unset, the bot falls back to its own avatar
   // (set that to the logo with `npm run avatar`).
   logoUrl: process.env.LOGO_URL || null,
+  // Twitch "go live" alerts (optional). Get these from dev.twitch.tv/console/apps.
+  // If either is blank, the feature just stays off.
+  twitchClientId: process.env.TWITCH_CLIENT_ID || null,
+  twitchClientSecret: process.env.TWITCH_CLIENT_SECRET || null,
 };

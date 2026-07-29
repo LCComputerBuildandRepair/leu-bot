@@ -72,6 +72,7 @@ const PING_ROLES = [
   { key: 'p_events',   name: '🎉 Events',        color: 0x34D399 },
   { key: 'p_movie',    name: '📽️ Movie Night',   color: 0xF87171 },
   { key: 'p_quiz',     name: '🎵 Music Quiz',    color: 0x2DD4BF },
+  { key: 'p_live',     name: '🔴 Live Alerts',   color: 0x9146FF },
 ];
 
 // Level-reward roles — auto-granted at these XP milestones (see messageCreate.js).
@@ -103,6 +104,7 @@ const CATEGORIES = [
       { key: 'announce',     name: '📣・announcements',  type: 'announcement', readonly: true },
       { key: 'roles',        name: '🎭・get-roles',      type: 'text',         readonly: true },
       { key: 'status',       name: '📊・server-status',  type: 'text',         readonly: true },
+      { key: 'golive',       name: '🔴・live-now',       type: 'text',         readonly: true },
       { key: 'verify',       name: '🔓・verify',         type: 'text',         readonly: true, visibility: 'public' },
     ],
   },

@@ -2,6 +2,7 @@
 const { Events, REST, Routes, ActivityType } = require('discord.js');
 const config = require('../config');
 const E = require('../utils/embeds');
+const twitch = require('../twitch');
 
 module.exports = {
   name: Events.ClientReady,
@@ -27,5 +28,8 @@ module.exports = {
       activities: [{ name: `🔥 ${config.communityName}`, type: ActivityType.Competing }],
       status: 'online',
     });
+
+    // Start Twitch go-live polling (no-op if credentials aren't set).
+    twitch.start(client);
   },
 };

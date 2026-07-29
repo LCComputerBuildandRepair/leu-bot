@@ -28,6 +28,8 @@ const DEFAULTS = {
   tempVcs: {},       // channelId → ownerId  (join-to-create voice rooms)
   starboard: {},     // sourceMsgId → starboardMsgId
   movies: {},        // id → movie-night data
+  streamers: [],     // [{ login, addedBy }]  Twitch channels to watch
+  live: {},          // login → current stream id (dedupe go-live posts)
   counters: { ticket: 0, scrim: 0, tournament: 0, movie: 0 },
 };
 
@@ -108,6 +110,29 @@ const db = {
   // ── movie nights ──
   setMovie(id, data) { load().movies[id] = data; save(); },
   getMovie(id) { return load().movies[id]; },
+
+  // ── twitch streamers ──
+  listStreamers() { return load().streamers; },
+  addStreamer(login, addedBy) {
+    const d = load();
+    const l = login.toLowerCase();
+    if (d.streamers.some((s) => s.login === l)) return false;
+    d.streamers.push({ login: l, addedBy });
+    save();
+    return true;
+  },
+  removeStreamer(login) {
+    const d = load();
+    const l = login.toLowerCase();
+    const before = d.streamers.length;
+    d.streamers = d.streamers.filter((s) => s.login !== l);
+    delete d.live[l];
+    save();
+    return d.streamers.length < before;
+  },
+  isLive(login) { return !!load().live[login.toLowerCase()]; },
+  setLive(login, streamId) { load().live[login.toLowerCase()] = streamId; save(); },
+  clearLive(login) { delete load().live[login.toLowerCase()]; save(); },
 
   save,
 };

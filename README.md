@@ -29,6 +29,7 @@ Windows VPS (the same one you run RedM on).
 | **Cleanup** | `/cleanup` deletes leftover old channels & unused roles, and grants every existing member the verified role. |
 | **Music Quiz** | `/musicquiz` — bot joins your voice channel and plays 30s clips of top songs in a chosen genre; first to type the song/artist scores. Powered by Deezer (no API key) + FFmpeg. |
 | **Movie Night** | `/movienight` — schedule a night, pick the service, RSVP buttons, auto watch-party instructions. (Can't stream Netflix/Hulu/etc. — DRM forbids it — so it coordinates + points to each service's official Watch Party.) |
+| **Twitch go-live** | Auto-posts a 🔴 alert in #live-now when a tracked streamer goes live + pings the Live Alerts role. `/streamers add|remove|list`. Needs `TWITCH_CLIENT_ID`/`SECRET` in `.env`. |
 | **Level rewards** | Auto-granted roles at levels 5/10/25/50/100. |
 | **Per-game LFG** | `/lfg game:` posts into that game's channel and pings its role. |
 | **Refresh panels** | `/refreshpanels` wipes & re-posts all panels in one click. |
