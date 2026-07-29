@@ -34,10 +34,12 @@ const handlers = {
     if (interaction.member.roles.cache.has(memberId)) {
       return interaction.reply({ embeds: [E.info('Already verified', 'You already have access. 🎮')], flags: EPH });
     }
+    // Acknowledge within Discord's 3s window FIRST, then do the (slower) role work.
+    await interaction.deferReply({ flags: EPH });
     await interaction.member.roles.add(memberId).catch(() => {});
     if (unverifiedId) await interaction.member.roles.remove(unverifiedId).catch(() => {});
-    await logTo(interaction.guild, 'server_log', E.success('Member Verified', `${interaction.user} passed verification.`));
-    return interaction.reply({ embeds: [E.success('Verified!', 'Welcome in — you can now see and chat in the main channels. Head to **#get-roles** to grab your games. 🎉')], flags: EPH });
+    logTo(interaction.guild, 'server_log', E.success('Member Verified', `${interaction.user} passed verification.`)).catch(() => {});
+    return interaction.editReply({ embeds: [E.success('Verified!', 'Welcome in — you can now see and chat in the main channels. Head to **#get-roles** to grab your games. 🎉')] });
   },
 
   // ── Self-assignable roles ────────────────────────────────────────────────
