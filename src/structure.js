@@ -26,6 +26,8 @@ const ROLES = [
   { key: 'sub',       name: '🔁 Substitute',     color: 0x38BDF8, hoist: false, mentionable: true },
   // Community
   { key: 'creator',   name: '🎬 Content Creator', color: 0xEC4899, hoist: true, mentionable: true },
+  // Gloamward playtesters — staff-assigned; unlocks the private testing channels.
+  { key: 'gloamward_tester', name: '🧪 Gloamward Tester', color: 0x818CF8, hoist: true, mentionable: true },
   { key: 'booster',   name: '💎 Server Booster', color: 0xF472B6, hoist: true,  mentionable: false },
   { key: 'member',    name: '✅ Member',          color: 0x94A3B8, hoist: false, mentionable: false },
   { key: 'unverified',name: '🕓 Unverified',      color: 0x4B5563, hoist: false, mentionable: false },
@@ -73,6 +75,7 @@ const PING_ROLES = [
   { key: 'p_movie',    name: '📽️ Movie Night',   color: 0xF87171 },
   { key: 'p_quiz',     name: '🎵 Music Quiz',    color: 0x2DD4BF },
   { key: 'p_live',     name: '🔴 Live Alerts',   color: 0x9146FF },
+  { key: 'gloamward',  name: '🌑 Gloamward',     color: 0x6366F1 },
 ];
 
 // Level-reward roles — auto-granted at these XP milestones (see messageCreate.js).
@@ -159,6 +162,24 @@ const CATEGORIES = [
       { key: 'vc_scrim',  name: '🆚 Scrim Room',type: 'voice' },
       { key: 'vc_chill',  name: '☕ Chill',     type: 'voice' },
       { key: 'vc_afk',    name: '💤 AFK',       type: 'voice' },
+    ],
+  },
+  {
+    // The user's own game, Gloamward. Public channels unlock when a member picks
+    // the 🌑 Gloamward role in #get-roles; the testing area is locked to the
+    // staff-assigned 🧪 Gloamward Tester role.
+    key: 'cat_gloamward', name: '🌑 GLOAMWARD', visibility: 'gated',
+    channels: [
+      { key: 'gw_announce',   name: '📣・gw-announcements', type: 'text',  readonly: true, visibility: 'game', gameKey: 'gloamward' },
+      { key: 'gw_devlog',     name: '📓・gw-devlog',        type: 'text',  readonly: true, visibility: 'game', gameKey: 'gloamward' },
+      { key: 'gw_discussion', name: '💬・gw-discussion',    type: 'text',  visibility: 'game', gameKey: 'gloamward' },
+      { key: 'gw_feedback',   name: '💡・gw-feedback',      type: 'text',  visibility: 'game', gameKey: 'gloamward' },
+      { key: 'gw_media',      name: '📸・gw-screenshots',   type: 'text',  visibility: 'game', gameKey: 'gloamward' },
+      { key: 'gw_vc',         name: '🌑 Gloamward VC',      type: 'voice', visibility: 'game', gameKey: 'gloamward' },
+      // Testers only
+      { key: 'gw_testing',    name: '🧪・testing-chat',     type: 'text',  visibility: 'game', gameKey: 'gloamward_tester' },
+      { key: 'gw_bugs',       name: '🐞・test-bug-reports', type: 'text',  visibility: 'game', gameKey: 'gloamward_tester' },
+      { key: 'gw_test_vc',    name: '🧪 Testing VC',        type: 'voice', visibility: 'game', gameKey: 'gloamward_tester' },
     ],
   },
   {
